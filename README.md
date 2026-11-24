@@ -1,6 +1,6 @@
 # Flat Hunt
 
-Private V3 design review. Public V2 has not been replaced.
+The React and TypeScript source of the live Flat Hunt demo.
 
 A mobile-first notebook for the flats you actually visit. Add places, compare rent and terms, keep a separate 20-point visit checklist per place, and copy a summary for a flatmate. No listings, brokerage, authentication, backend or ranking algorithm.
 

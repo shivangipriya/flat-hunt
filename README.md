@@ -2,6 +2,8 @@
 
 House-hunting in an Indian city means visiting five places in a weekend and remembering none of them clearly by Monday. Flat Hunt keeps the comparison in one page: add each place you visit, tick a checklist for that flat while you are standing in it, and copy a summary for the family group before you decide.
 
+**Try it:** https://flat-hunt.pages.dev/ - runs in your browser, no signup.
+
 Open `index.html` in any browser. There is nothing to install and no account. Nothing is saved or sent anywhere unless you choose it - the page forgets everything when you close it unless you tick "remember in this browser" or copy an export text.
 
 ## What is inside

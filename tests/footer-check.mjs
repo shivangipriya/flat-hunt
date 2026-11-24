@@ -13,6 +13,6 @@ assert.equal((await a.innerText()).trim(),'Shivangi Priya','name text preserved'
 assert.equal(await a.getAttribute('target'),'_blank','opens new tab');
 assert.equal(await a.getAttribute('rel'),'noreferrer','noreferrer set');
 await a.scrollIntoViewIfNeeded();
-await p.screenshot({path:'/downloads/fh-footer-link-390.png'});
+try{await p.screenshot({path:'/downloads/fh-footer-link-390.png'})}catch{}// optional local artifact, not an assertion
 console.log('FOOTER CHECKS PASS');
 }finally{await b.close();server.kill();}

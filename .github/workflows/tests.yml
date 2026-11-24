@@ -11,4 +11,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm test
+      - run: npm run build
+      - run: npm install --no-save playwright
+      - run: node tests/footer-check.mjs
       - run: node reference/fh-test.cjs

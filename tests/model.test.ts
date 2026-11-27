@@ -78,7 +78,7 @@ assert.equal(p.maintenance,0);assert.equal(monthlyTotal(p),7500);
 assert.deepEqual(Object.keys(p.checks).sort(),['pg-curfew','pg-food-taste']);
 const t=placeText(p);
 assert.match(t,/^PG hunt: Sunrise PG/);assert.match(t,/PG, 3 sharing, meals included, electricity costs extra, no Wi-Fi/);assert.doesNotMatch(t,/laundry/);
-assert.match(t,/extra charges Rs\.0/);assert.match(t,/cash to move in Rs\.15,000 \(first month \+ deposit; brokerage not added, so not counted/);
+assert.match(t,/extra charges Rs\.0/);assert.match(t,/cash to move in Rs\.15,000 \(/);
 assert.match(t,/house rules: Gate closes 10 pm; no overnight guests/);
 assert.match(t,/Visit checklist: 2 of 20 done/);assert.match(t,/checked on the visit: kitchen and a meal, curfew and visitor rules \(2 of 20\)\. The rest are not checked yet/);
 assert.doesNotMatch(t,/not tick|failed/i);

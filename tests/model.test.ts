@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks,upfront,monthlyTotal,draftFrom,placeText,droppedLegacyTicks} from '../src/model';
+import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks,upfront,monthlyTotal,draftFrom,placeText,droppedLegacyTicks,clearedInImport} from '../src/model';
 import {CHECK_IDS,VISIT} from '../src/content';
 const require=createRequire(import.meta.url);const old=require('../reference/core.cjs');
 test('checklist has the same 20 items',()=>assert.equal(totalChecks,old.totalChecks()));
@@ -52,4 +52,10 @@ assert.deepEqual(sanitizeList(decode(encode([p]))!.places).places[0].checks,{bat
 test('removing and re-sorting never shifts ticks: every check id is unique and matches the visit list shape',()=>{
 assert.equal(new Set(CHECK_IDS.flat()).size,20);
 assert.deepEqual(CHECK_IDS.map(g=>g.length),VISIT.map(g=>g[1].length));
+});
+test('old export import reports how many ticks were cleared',()=>{
+const legacy=encode([{id:1,name:'X',notes:'',checks:{'0-0':true,'2-0':true,'3-1':true}} as any]);
+assert.equal(clearedInImport(legacy),2);
+assert.equal(clearedInImport('not base64'),0);
+assert.equal(clearedInImport(encode(sanitizeList([{name:'Y',checks:{taps:true}}]).places)),0);
 });

@@ -1,4 +1,4 @@
-import {chromium} from 'playwright';
+import {chromium} from 'playwright-core';
 import {spawn} from 'node:child_process';
 import assert from 'node:assert/strict';
 const server=spawn('python3',['-m','http.server','8767','--directory','dist'],{stdio:'ignore'});
@@ -13,6 +13,6 @@ assert.equal((await a.innerText()).trim(),'Shivangi Priya','name text preserved'
 assert.equal(await a.getAttribute('target'),'_blank','opens new tab');
 assert.equal(await a.getAttribute('rel'),'noreferrer','noreferrer set');
 await a.scrollIntoViewIfNeeded();
-try{await p.screenshot({path:'/downloads/fh-footer-link-390.png'})}catch{}// optional local artifact, not an assertion
+try{await p.screenshot({path:'/tmp/fh-footer-link-390.png'})}catch{}// optional local artifact, not an assertion
 console.log('FOOTER CHECKS PASS');
 }finally{await b.close();server.kill();}

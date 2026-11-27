@@ -36,7 +36,7 @@ test('maintenance is optional and unknown is not zero',()=>{const a=sanitizeList
 test('maintenance validation and draft round trip',()=>{const d={...emptyDraft(),name:'A',rent:'20000',maintenance:'2000'};const r=validateDraft(d);assert.equal(r.place?.maintenance,2000);assert.equal(draftFrom(r.place!).maintenance,'2000');assert.equal(draftFrom(sanitizeList([{name:'B'}]).places[0]).maintenance,'');assert.ok(validateDraft({...d,maintenance:'-5'}).errors.maintenance);assert.equal(validateDraft({...d,maintenance:''}).place?.maintenance,undefined);});
 test('maintenance survives export and import, old exports still load',()=>{const p=sanitizeList([{name:'A',rent:1000,maintenance:200}]).places;assert.equal(decode(encode(p))!.places[0].maintenance,200);assert.equal(decode(btoa(JSON.stringify({places:[{name:'Old',rent:5}]})))!.places[0].maintenance,undefined);});
 test('summary mentions maintenance only when it was entered',()=>{const withM=sanitizeList([{name:'A',rent:20000,maintenance:2000}]).places;assert.match(summary(withM),/maintenance Rs\.2000, monthly total Rs\.22000/);const without=sanitizeList([{name:'A',rent:20000}]).places;assert.doesNotMatch(summary(without),/maintenance|monthly total/);});
-test('single place share text is self-contained and never shows zero for unknowns',()=>{const p=sanitizeList([{name:'HSR',rent:19000,deposit:2,brokerage:1,notes:'Direct owner',checks:{'0-0':true}}]).places[0];const t=placeText(p);assert.match(t,/^Flat hunt: HSR/);assert.match(t,/cash to move in Rs\.76,?000/);assert.match(t,/Visit checklist: 1 of 20 done/);assert.match(t,/Notes: Direct owner/);assert.doesNotMatch(t,/maintenance Rs|lock-in|commute/);});
+test('single place share text is self-contained and never shows zero for unknowns',()=>{const p=sanitizeList([{name:'HSR',rent:19000,deposit:2,brokerage:1,notes:'Direct owner',checks:{'0-0':true}}]).places[0];const t=placeText(p);assert.match(t,/^Flat hunt: HSR/);assert.match(t,/cash to move in Rs\.76,?000/);assert.match(t,/Visit checklist: 1 of 20 done/);assert.match(t,/Notes: Direct owner/);assert.doesNotMatch(t,/maintenance Rs|lock-in|commute/);assert.match(t,/checked on the visit: taps and hot water \(1 of 20\)\. The rest are not checked yet/);});
 test('legacy positional ticks keep only checks whose meaning is unchanged',()=>{
 const all:Record<string,boolean>={};for(let g=0;g<5;g++)for(let i=0;i<4;i++)all[`${g}-${i}`]=true;
 const p=sanitizeList([{name:'Old',checks:all}]).places[0];
@@ -69,4 +69,27 @@ assert.deepEqual(decode(text.split('\n').pop()!)?.places,ps);
 assert.equal(clearedInImport(exportText(sanitizeList([{name:'Z'}]).places)),0);
 assert.equal(exportText([]),encode([]));
 assert.equal(decode('hello eyJ'+'a'.repeat(30)),null);
+});
+
+test('PG place keeps its own fields, checks and unknown vs included vs zero stay distinct',()=>{
+const p=sanitizeList([{name:'Sunrise PG',kind:'pg',rent:7500,deposit:1,maintenance:0,sharing:'triple',meals:'included',electricity:'extra',wifi:'no',laundry:'',rules:'  Gate closes 10 pm; no overnight guests  ',checks:{'pg-food-taste':true,'pg-curfew':true,'taps':true,'0-0':true}}]).places[0];
+assert.equal(p.kind,'pg');assert.equal(p.sharing,'triple');assert.equal(p.meals,'included');assert.equal(p.electricity,'extra');assert.equal(p.wifi,'no');assert.equal(p.laundry,undefined);
+assert.equal(p.maintenance,0);assert.equal(monthlyTotal(p),7500);
+assert.deepEqual(Object.keys(p.checks).sort(),['pg-curfew','pg-food-taste']);
+const t=placeText(p);
+assert.match(t,/^PG hunt: Sunrise PG/);assert.match(t,/PG, 3 sharing, meals included, electricity costs extra, no Wi-Fi/);assert.doesNotMatch(t,/laundry/);
+assert.match(t,/extra charges Rs\.0/);assert.match(t,/cash to move in Rs\.15,000 \(first month \+ deposit; brokerage not added, so not counted/);
+assert.match(t,/house rules: Gate closes 10 pm; no overnight guests/);
+assert.match(t,/Visit checklist: 2 of 20 done/);assert.match(t,/checked on the visit: kitchen and a meal, curfew and visitor rules \(2 of 20\)\. The rest are not checked yet/);
+assert.doesNotMatch(t,/not tick|failed/i);
+const s=summary([p]);assert.match(s,/1\. Sunrise PG - PG, 3 sharing/);assert.match(s,/house rules:/);
+assert.deepEqual(sanitizeList(decode(encode([p]))!.places).places[0],p);
+});
+test('flat data is unchanged by the PG fields and flat ignores PG-only input',()=>{
+const f=sanitizeList([{name:'Flat',rent:20000,sharing:'double',meals:'included',rules:'x',checks:{'pg-curfew':true,taps:true}}]).places[0];
+assert.equal(f.kind,undefined);assert.equal(f.sharing,undefined);assert.equal(f.meals,undefined);assert.equal(f.rules,undefined);assert.deepEqual(f.checks,{taps:true});
+});
+test('PG list has 20 checks in 5 groups with unique ids that match',()=>{
+assert.equal(new Set(PG_CHECK_IDS.flat()).size,20);assert.deepEqual(PG_CHECK_IDS.map(g=>g.length),PG_VISIT.map(g=>g[1].length));
+for(const id of [...CHECK_IDS.flat(),...PG_CHECK_IDS.flat()])assert.ok(SHORT[id],'short name for '+id);
 });

@@ -70,5 +70,23 @@ ok(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)
 await p.evaluate(()=>localStorage.setItem('flathunt-v2',JSON.stringify({places:[{id:1,name:'Old save',rent:18000,deposit:2,lockin:6,commute:10,brokerage:1,feel:6,notes:'',checks:{'0-0':true}}]})));
 await p.reload();await p.waitForTimeout(500);
 ok((await p.locator('.fh-place').innerText()).includes('Old save')&&(await p.locator('.fh-place').innerText()).includes('Add maintenance to see it'),'saved data from before this change loads, maintenance unknown');
+// legacy ticks: carried only when the meaning is unchanged, never on a changed check
+await p.evaluate(()=>localStorage.setItem('flathunt-v2',JSON.stringify({places:[{id:1,name:'Ticked',rent:18000,deposit:2,lockin:6,commute:10,brokerage:1,feel:6,notes:'',checks:{'0-0':true,'1-1':true,'2-0':true,'2-3':true,'3-1':true,'3-2':true,'4-1':true,'4-3':true}}]})));
+await p.reload();await p.waitForTimeout(500);
+ok((await p.locator('#root').innerText()).includes('4 saved visit ticks were cleared'),'notice says 4 old ticks were cleared');
+await p.getByRole('tab',{name:'On the visit'}).click();
+const on=await p.locator('.fh-check input').evaluateAll(els=>els.map(e=>[e.checked,e.parentElement.innerText]));
+const checked=on.filter(x=>x[0]).map(x=>x[1]);
+ok(checked.length===4,'exactly 4 checks ticked after migration, got '+checked.length);
+for(const s of ['pressure and hot water','ventilation and daylight','Rent increase','Flood/waterlogging'])ok(checked.some(c=>c.includes(s)),'kept tick: '+s);
+for(const s of ['broadband','what is included (fans','What rent includes','Door and window locks','Bathroom','Electricals'])ok(!checked.some(c=>c.includes(s)),'not falsely ticked: '+s);
+await p.getByRole('tab',{name:'Shortlist'}).click();
+const card=await p.locator('.fh-place').innerText();
+ok(card.includes('4 / 20'),'card shows 4 / 20');
+ok(card.includes("Excludes maintenance and moving costs"),'cash to move in label excludes maintenance');
+// ticking now saves stable ids, and a reload keeps them
+await p.getByRole('tab',{name:'On the visit'}).click();await p.locator('.fh-check input').nth(4).check();await p.reload();await p.waitForTimeout(500);
+const saved=await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('flathunt-v2')).places[0].checks).sort());
+ok(saved.includes('bathroom')&&saved.every(k=>!/^\d-\d$/.test(k)),'saved keys are stable ids: '+saved.join(','));
 console.log('BUNDLE CHECKS',n);
 }finally{await b.close();server.kill();}

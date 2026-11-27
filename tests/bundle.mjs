@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 const server=spawn('python3',['-m','http.server','8771','--directory','dist'],{stdio:'ignore'});await new Promise(r=>setTimeout(r,600));
 const b=await chromium.launch({executablePath:'/usr/bin/google-chrome-stable',headless:true,args:['--no-sandbox']});
 const ctx=await b.newContext({viewport:{width:390,height:844},permissions:['clipboard-read','clipboard-write']});const p=await ctx.newPage();
+const has=async(loc,s)=>{for(let i=0;i<50;i++){try{if((await loc.innerText()).includes(s))return true;}catch{}await p.waitForTimeout(100)}return false};
 let n=0;const ok=(v,m)=>{assert.ok(v,m);console.log('PASS',++n,m)};
 try{
 await p.goto('http://localhost:8771');
@@ -45,10 +46,10 @@ ok(!(await p.evaluate(()=>document.querySelector('.fh-app [aria-live=polite]').i
 await p.getByRole('button',{name:'Clear example'}).click();
 await p.getByRole('button',{name:'+ Add a place'}).click();
 await p.locator('#place-name').fill('Test flat');await p.locator('#field-rent').fill('20000');await p.locator('#field-maintenance').fill('1500');await p.getByRole('button',{name:'Add to shortlist'}).click();
-ok((await cards.nth(0).innerText()).includes('₹21,500'),'new place total = rent + maintenance');
+ok(await has(cards.nth(0),'₹21,500'),'new place total = rent + maintenance');
 await p.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-maintenance').inputValue()==='1500','edit form shows saved maintenance');
 await p.locator('#field-maintenance').fill('');await p.getByRole('button',{name:'Save changes'}).click();
-ok((await cards.nth(0).innerText()).includes('Add maintenance to see it'),'clearing maintenance returns to unknown, not 0');
+ok(await has(cards.nth(0),'Add maintenance to see it'),'clearing maintenance returns to unknown, not 0');
 await p.getByRole('button',{name:'Edit'}).click();await p.locator('#field-maintenance').fill('-3');await p.getByRole('button',{name:'Save changes'}).click();
 ok(await p.locator('#err-maintenance').count()===1,'invalid maintenance is rejected with a message');
 await p.getByRole('button',{name:'Cancel'}).click();
@@ -69,11 +70,11 @@ ok(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)
 // legacy saved data without maintenance still loads
 await p.evaluate(()=>localStorage.setItem('flathunt-v2',JSON.stringify({places:[{id:1,name:'Old save',rent:18000,deposit:2,lockin:6,commute:10,brokerage:1,feel:6,notes:'',checks:{'0-0':true}}]})));
 await p.reload();await p.waitForTimeout(500);
-ok((await p.locator('.fh-place').innerText()).includes('Old save')&&(await p.locator('.fh-place').innerText()).includes('Add maintenance to see it'),'saved data from before this change loads, maintenance unknown');
+ok(await has(p.locator('.fh-place'),'Old save')&&await has(p.locator('.fh-place'),'Add maintenance to see it'),'saved data from before this change loads, maintenance unknown');
 // legacy ticks: carried only when the meaning is unchanged, never on a changed check
 await p.evaluate(()=>localStorage.setItem('flathunt-v2',JSON.stringify({places:[{id:1,name:'Ticked',rent:18000,deposit:2,lockin:6,commute:10,brokerage:1,feel:6,notes:'',checks:{'0-0':true,'1-1':true,'2-0':true,'2-3':true,'3-1':true,'3-2':true,'4-1':true,'4-3':true}}]})));
 await p.reload();await p.waitForTimeout(500);
-ok((await p.locator('#root').innerText()).includes('4 saved visit ticks were cleared'),'notice says 4 old ticks were cleared');
+ok(await has(p.locator('#root'),'4 saved visit ticks were cleared'),'notice says 4 old ticks were cleared');
 await p.getByRole('tab',{name:'On the visit'}).click();
 const on=await p.locator('.fh-check input').evaluateAll(els=>els.map(e=>[e.checked,e.parentElement.innerText]));
 const checked=on.filter(x=>x[0]).map(x=>x[1]);
@@ -81,20 +82,28 @@ ok(checked.length===4,'exactly 4 checks ticked after migration, got '+checked.le
 for(const s of ['pressure and hot water','ventilation and daylight','Rent increase','Flood/waterlogging'])ok(checked.some(c=>c.includes(s)),'kept tick: '+s);
 for(const s of ['broadband','what is included (fans','What rent includes','Door and window locks','Bathroom','Electricals'])ok(!checked.some(c=>c.includes(s)),'not falsely ticked: '+s);
 await p.getByRole('tab',{name:'Shortlist'}).click();
-const card=await p.locator('.fh-place').innerText();
-ok(card.includes('4 / 20'),'card shows 4 / 20');
-ok(card.includes("Excludes maintenance and moving costs"),'cash to move in label excludes maintenance');
+ok(await has(p.locator('.fh-place'),'4 / 20'),'card shows 4 / 20');
+ok(await has(p.locator('.fh-place'),"Excludes maintenance and moving costs"),'cash to move in label excludes maintenance');
 // ticking now saves stable ids, and a reload keeps them
 await p.getByRole('tab',{name:'On the visit'}).click();await p.locator('.fh-check input').nth(4).check();await p.reload();await p.waitForTimeout(500);
 const saved=await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('flathunt-v2')).places[0].checks).sort());
 ok(saved.includes('bathroom')&&saved.every(k=>!/^\d-\d$/.test(k)),'saved keys are stable ids: '+saved.join(','));
 // importing an old export: same migration, same honest notice
 await p.getByRole('tab',{name:'Shortlist'}).click();
-await p.getByRole('button',{name:'Import / view text'}).click();
+await p.getByRole('button',{name:'Restore from text'}).click();
 const exp=await p.evaluate(()=>btoa(unescape(encodeURIComponent(JSON.stringify({places:[{id:1,name:'Imported old',rent:15000,checks:{'0-0':true,'2-0':true,'3-1':true}}]})))));
 await p.locator('#export-text').fill(exp);
-await p.getByRole('button',{name:'Replace list from export'}).click();await p.waitForTimeout(300);
-ok((await p.locator('#root').innerText()).includes('2 visit ticks from the older export were cleared'),'old export import says 2 ticks were cleared');
-ok((await p.locator('.fh-place').innerText()).includes('1 / 20'),'imported old export keeps only the unchanged tick (1 / 20)');
+await p.getByRole('button',{name:'Replace my list with this text'}).click();await p.waitForTimeout(300);
+ok(await has(p.locator('#root'),'2 visit ticks from the older export were cleared'),'old export import says 2 ticks were cleared');
+ok(await has(p.locator('.fh-place'),'1 / 20'),'imported old export keeps only the unchanged tick (1 / 20)');
+// copy my list: readable message, and the whole message restores the list
+await p.getByRole('tab',{name:'Shortlist'}).click();
+await p.getByRole('button',{name:'Hide text box'}).click().catch(()=>{});
+await p.getByRole('button',{name:'Copy my list'}).click();await p.waitForTimeout(300);
+const clipTxt=await p.evaluate(()=>navigator.clipboard.readText());
+ok(clipTxt.startsWith('Flat hunt comparison:')&&clipTxt.includes('Imported old')&&clipTxt.includes('Flat Hunt backup code'),'copied list starts readable, with a labelled backup code');
+await p.getByRole('button',{name:'Restore from text'}).click();await p.locator('#export-text').fill(clipTxt);
+await p.getByRole('button',{name:'Replace my list with this text'}).click();await p.waitForTimeout(300);
+ok(await has(p.locator('.fh-place'),'Imported old')&&await has(p.locator('.fh-place'),'1 / 20'),'pasting the whole copied message restores the place and its tick');
 console.log('BUNDLE CHECKS',n);
 }finally{await b.close();server.kill();}

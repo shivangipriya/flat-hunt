@@ -42,3 +42,21 @@ export const ASK = [
 export const MOVEIN = [
   "Photograph every existing scratch, stain and fitting on move-in day and share the photos with the owner the same day."
 ]
+
+// Stable ids, parallel to VISIT. Saved ticks use these, so reordering or rewording the list never moves a tick.
+export const CHECK_IDS: string[][] = [
+  ["taps","water-timing","power-backup","meter","bathroom","electricals"],
+  ["damp","ventilation","pests","balcony"],
+  ["signal-broadband","noise","kitchen","storage-fittings"],
+  ["rent-includes","rent-increase"],
+  ["street-lighting","locks-entry","guest-parking-rules","flood"]
+]
+// Ticks saved by the first version used "group-item" positions in the old list. Only checks whose meaning did not change are carried over.
+// The old signal, storage and "what is included" checks now ask for more, and three old checks were removed, so those old ticks are dropped.
+export const LEGACY_TICKS: Record<string,string|null> = {
+  "0-0":"taps","0-1":"water-timing","0-2":"power-backup","0-3":"meter",
+  "1-0":"damp","1-1":"ventilation","1-2":"pests","1-3":"balcony",
+  "2-0":null,"2-1":"noise","2-2":"kitchen","2-3":null,
+  "3-0":null,"3-1":null,"3-2":"rent-increase","3-3":null,
+  "4-0":"street-lighting","4-1":null,"4-2":"guest-parking-rules","4-3":"flood"
+}

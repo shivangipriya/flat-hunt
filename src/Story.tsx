@@ -1,5 +1,6 @@
 import {STORY_IMAGES} from './storyImages';
-const img=(k:'wall'|'highlight'|'brick',alt:string,cap:string)=>STORY_IMAGES[k]?<figure className="fh-story-fig"><img src={STORY_IMAGES[k]} alt={alt}/><figcaption>{cap}</figcaption></figure>:null;
+const DIM={wall:[735,742],highlight:[736,688],brick:[675,538]} as const;
+const img=(k:'wall'|'highlight'|'brick',alt:string,cap:string)=>STORY_IMAGES[k]?<figure className="fh-story-fig"><img src={STORY_IMAGES[k]} alt={alt} width={DIM[k][0]} height={DIM[k][1]} decoding="async"/><figcaption>{cap}</figcaption></figure>:null;
 export function Story(){
  return <div className="fh-app fh-story-page">
   <header className="fh-header"><a className="fh-wordmark" href="#"><span>⌂</span>flat hunt<span className="fh-dot">.</span></a><a className="fh-text" href="#">← Back to the notebook</a></header>
@@ -23,6 +24,6 @@ export function Story(){
    <p>That is the whole story. I did not set out to build a clever app. I wanted a place to put what a balcony makes you forget.</p>
    <div className="fh-story-try"><p>Try it on the last flat you saw: <a href="#">flat-hunt.pages.dev</a></p><p>If a check is missing, tell me which one. The source is on <a href="https://github.com/shivangipriya/flat-hunt" target="_blank" rel="noreferrer">GitHub</a>.</p></div>
   </article>
-  <footer className="fh-footer fh-story-footer"><div><strong>flat hunt.</strong></div><p>Made with care by <a href="https://www.linkedin.com/in/shivangii-priyaa" target="_blank" rel="noreferrer">Shivangi Priya</a> · <a href="#story">The story behind it</a> · <a href="https://github.com/shivangipriya/flat-hunt" target="_blank" rel="noreferrer">Source on GitHub</a></p></footer>
+  <footer className="fh-footer fh-story-footer"><div><strong>flat hunt.</strong></div><p>Made with care by <a href="https://www.linkedin.com/in/shivangii-priyaa" target="_blank" rel="noreferrer">Shivangi Priya</a> · <a href="https://github.com/shivangipriya/flat-hunt" target="_blank" rel="noreferrer">Source on GitHub</a></p></footer>
  </div>;
 }

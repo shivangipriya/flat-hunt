@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks,upfront,monthlyTotal,draftFrom,placeText,droppedLegacyTicks,clearedInImport} from '../src/model';
+import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks,upfront,monthlyTotal,draftFrom,placeText,droppedLegacyTicks,clearedInImport,exportText} from '../src/model';
 import {CHECK_IDS,VISIT} from '../src/content';
 const require=createRequire(import.meta.url);const old=require('../reference/core.cjs');
 test('checklist has the same 20 items',()=>assert.equal(totalChecks,old.totalChecks()));
@@ -58,4 +58,15 @@ const legacy=encode([{id:1,name:'X',notes:'',checks:{'0-0':true,'2-0':true,'3-1'
 assert.equal(clearedInImport(legacy),2);
 assert.equal(clearedInImport('not base64'),0);
 assert.equal(clearedInImport(encode(sanitizeList([{name:'Y',checks:{taps:true}}]).places)),0);
+});
+test('copied list is readable and the whole message restores the list',()=>{
+const ps=sanitizeList([{name:'Indiranagar',rent:23000,maintenance:2000,deposit:3,brokerage:1,notes:'Bright kitchen',checks:{taps:true}},{name:'HSR',rent:19000}]).places;
+const text=exportText(ps);
+assert.ok(text.startsWith('Flat hunt comparison:'));assert.ok(text.includes('monthly total Rs.25000'));assert.ok(text.includes('Flat Hunt backup code'));
+assert.deepEqual(decode(text)?.places,ps);
+assert.deepEqual(decode(encode(ps))?.places,ps);
+assert.deepEqual(decode(text.split('\n').pop()!)?.places,ps);
+assert.equal(clearedInImport(exportText(sanitizeList([{name:'Z'}]).places)),0);
+assert.equal(exportText([]),encode([]));
+assert.equal(decode('hello eyJ'+'a'.repeat(30)),null);
 });

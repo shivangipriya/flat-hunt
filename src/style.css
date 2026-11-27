@@ -147,3 +147,11 @@
 
 .fh-io p{margin:10px 0 14px}
 .fh-io .fh-secondary{margin-top:2px}
+
+.fh-status{margin:10px 0;font-size:.9rem;color:#2c5a46}
+.fh-status-ok::before{content:"\2713  ";font-weight:700}
+.fh-status-warn{border-left:4px solid #c2622d}
+.fh-backup{margin-top:14px}
+.fh-backup>.fh-text{font-size:.9rem;opacity:.85;text-decoration:underline}
+.fh-backup .fh-io label{display:block;margin:12px 0 6px}
+.fh-backup .fh-io textarea{min-height:64px}

@@ -136,3 +136,11 @@
 .fh-upfront{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:var(--fh-cream);display:flex;flex-direction:column;gap:2px}.fh-upfront span{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--fh-muted)}.fh-upfront b{font-size:18px;color:var(--fh-ink)}.fh-upfront small{font-size:12px;color:var(--fh-muted)}
 .fh-visit-sticky{position:sticky;top:0;z-index:5;background:#fbfaf5;padding:8px 0 6px;margin-bottom:10px}
 .fh-story-fig img{height:auto;width:auto}
+.fh-toolbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.fh-copy-wrap{display:inline-flex;align-items:center;gap:8px}
+.fh-copied{font-size:13px;font-weight:700;color:var(--fh-green,#14402f);background:#e4ede3;border-radius:999px;padding:3px 10px}
+.fh-card-actions .fh-copy-wrap{margin-left:4px}
+.fh-card-actions{flex-wrap:wrap}
+.fh-movein{margin-top:28px}
+@media(max-width:600px){.fh-toolbar-actions{justify-content:flex-start;width:100%}}
+.fh-card-actions .fh-copy-wrap button:last-child{margin-left:0;color:inherit}

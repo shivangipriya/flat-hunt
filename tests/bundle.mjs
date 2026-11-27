@@ -49,7 +49,7 @@ await p.locator('#place-name').fill('Test flat');await p.locator('#field-rent').
 ok(await has(cards.nth(0),'₹21,500'),'new place total = rent + maintenance');
 await p.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-maintenance').inputValue()==='1500','edit form shows saved maintenance');
 await p.locator('#field-maintenance').fill('');await p.getByRole('button',{name:'Save changes'}).click();
-ok(await has(cards.nth(0),'Add maintenance to see it'),'clearing maintenance returns to unknown, not 0');
+{const okk=await has(cards.nth(0),'Add maintenance to see it');if(!okk)console.log('FAILDUMP',JSON.stringify({cards:await cards.allInnerTexts(),forms:await p.locator('.fh-form-panel').count(),maint:(await p.locator('#field-maintenance').count())?await p.locator('#field-maintenance').inputValue():'noform',errs:await p.locator('.fh-error').allInnerTexts(),msg:await p.locator('[aria-live=polite]').allInnerTexts(),stored:await p.evaluate(()=>Object.keys(localStorage).map(k=>k+'='+(localStorage.getItem(k)||'').slice(0,300)))}));ok(okk,'clearing maintenance returns to unknown, not 0');}
 await p.getByRole('button',{name:'Edit'}).click();await p.locator('#field-maintenance').fill('-3');await p.getByRole('button',{name:'Save changes'}).click();
 ok(await p.locator('#err-maintenance').count()===1,'invalid maintenance is rejected with a message');
 await p.getByRole('button',{name:'Cancel'}).click();

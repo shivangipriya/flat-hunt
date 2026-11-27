@@ -161,3 +161,4 @@
 .fh-kind button{flex:1;min-height:44px;border:1.5px solid #9db8a8;border-radius:12px;background:#fff;color:#123f33;font:inherit;font-weight:600}
 .fh-kind button.fh-kind-on{background:#123f33;color:#fff;border-color:#123f33}
 .fh-field select{width:100%;min-height:44px;border:1.5px solid #9db8a8;border-radius:10px;padding:8px 10px;font:inherit;background:#fff}
+.fh-hint{margin:4px 0 0;font-size:.85rem;color:#4a5a52}

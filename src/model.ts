@@ -22,6 +22,7 @@ export const display=(n:number|null,suffix='')=>n===null?'Not added':`${n.toLoca
 export function encode(places:Place[]):string{return btoa(unescape(encodeURIComponent(JSON.stringify({places}))));}
 const codeIn=(text:string):string=>{const t=text.trim();const m=t.match(/eyJ[A-Za-z0-9+\/=]{20,}/);return m&&!/^eyJ[A-Za-z0-9+\/=]*$/.test(t)?m[0]:t;};
 export function exportText(places:Place[]):string{if(!places.length)return encode(places);return [summary(places),'','Flat Hunt backup code. To restore this list, paste this whole message into Flat Hunt and use Restore from text:',encode(places)].join('\n');}
+export function backupText(places:Place[]):string{return ['Flat Hunt backup code. To restore this list, paste it into Backup and restore on the Flat Hunt page:',encode(places)].join('\n');}
 export function clearedInImport(text:string):number{try{const t=codeIn(text);if(!t||t.length>200000)return 0;const obj=JSON.parse(decodeURIComponent(escape(atob(t))));return obj&&Array.isArray(obj.places)?droppedLegacyTicks(obj.places):0;}catch{return 0;}}
 export function decode(text:string):{places:Place[];skipped:number}|null {try{const t=codeIn(text);if(!t||t.length>200000)return null;const obj=JSON.parse(decodeURIComponent(escape(atob(t))));if(!obj||!Array.isArray(obj.places))return null;const out=sanitizeList(obj.places);return obj.places.length&&!out.places.length?null:out;}catch{return null;}}
 const money=(n:number)=>'Rs.'+n.toLocaleString('en-IN');

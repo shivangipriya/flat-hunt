@@ -12,12 +12,12 @@ await p.goto('http://localhost:8771');
 await p.getByRole('button',{name:'+ Add a place'}).first().click();
 await p.getByRole('radio',{name:'PG'}).click();
 ok(await p.locator('#pg-sharing').isVisible()&&await p.locator('#pg-rules').isVisible(),'PG form shows sharing, services and rules');
-await p.locator('#place-name').fill('Sunrise PG');await p.locator('#field-rent').fill('7500');await p.locator('#field-maintenance').fill('0');await p.locator('#field-deposit').fill('1');
+await p.locator('#place-name').fill('Sunrise PG');await p.locator('#field-rent').fill('7500');await p.locator('#field-maintenance').fill('0');await p.locator('#field-deposit').fill('1');await p.locator('#field-feel').fill('8');
 await p.locator('#pg-sharing').selectOption('triple');await p.locator('#pg-meals').selectOption('included');await p.locator('#pg-electricity').selectOption('extra');
 await p.locator('#pg-rules').fill('Gate closes 10 pm. No overnight guests.');
 await p.getByRole('button',{name:'Add to shortlist'}).click();await p.waitForTimeout(300);
 const pgc=p.locator('.fh-place').first();
-for(const s of ['PLACE 01 · PG','3 sharing','Included','Costs extra','Gate closes 10 pm','Rent + extra charges','₹7,500','₹15,000','Brokerage not added, so not counted'])ok(await has(pgc,s),'PG card shows: '+s);
+for(const s of ['PLACE 01 · PG','3 sharing','Included','Costs extra','Gate closes 10 pm','Rent + extra charges','₹7,500','₹15,000','KNOWN CASH TO MOVE IN (SUBTOTAL)','KNOWN MONTHLY SUBTOTAL','Brokerage not added, so the real total may be higher'])ok(await has(pgc,s),'PG card shows: '+s);
 ok(!(await pgc.innerText()).includes('Laundry'),'laundry not asked stays absent (not shown as no or zero)');
 // a flat next to it
 await p.getByRole('button',{name:'+ Add a place'}).first().click();
@@ -38,7 +38,7 @@ await p.getByRole('tab',{name:'Shortlist'}).click();
 ok(await has(p.locator('.fh-place').first(),'2 / 20'),'PG card shows 2 / 20');
 await p.getByRole('button',{name:'Copy my list as text'}).click();await p.waitForTimeout(300);
 const hum=await p.evaluate(()=>navigator.clipboard.readText());
-for(const s of ['1. Sunrise PG - PG, 3 sharing, meals included, electricity costs extra, rent Rs.7500, extra charges Rs.0, monthly total Rs.7500','cash to move in Rs.15,000 (first month + deposit; brokerage not added, so not counted','house rules: Gate closes 10 pm. No overnight guests.','checked on the visit: kitchen and a meal, curfew and visitor rules (2 of 20). The rest are not checked yet, which is not the same as a problem.','2. Vijay Nagar 1BHK - rent Rs.14000, maintenance Rs.1200, monthly total Rs.15200','cash to move in Rs.56,000 (first month + deposit + brokerage; excludes maintenance and moving costs)'])ok(hum.includes(s),'shared text has: '+s.slice(0,70));
+for(const s of ['1. Sunrise PG - PG, 3 sharing, meals included, electricity costs extra, rent Rs.7500, extra charges Rs.0, known monthly subtotal Rs.7500 (rent + extra charges entered; electricity costs extra, so the real monthly cost may be higher)','known cash to move in Rs.15,000 (subtotal: first month + deposit only. Brokerage not added','house rules: Gate closes 10 pm. No overnight guests.','checked on the visit: kitchen and a meal, curfew and visitor rules (2 of 20). The rest are not checked yet, which is not the same as a problem.','2. Vijay Nagar 1BHK - rent Rs.14000, maintenance Rs.1200, monthly total Rs.15200','cash to move in Rs.56,000 (first month + deposit + brokerage; excludes maintenance and moving costs)'])ok(hum.includes(s),'shared text has: '+s.slice(0,70));
 ok(!/eyJ[A-Za-z0-9+\/=]{20,}/.test(hum)&&!hum.includes('laundry')&&!/fail/i.test(hum),'shared text: no code, no unasked laundry, no failure wording');
 await p.evaluate(()=>{Object.defineProperty(navigator,'share',{value:undefined,configurable:true})});
 await p.getByRole('button',{name:'Share Sunrise PG'}).click();await p.waitForTimeout(300);
@@ -53,5 +53,26 @@ await p.getByRole('button',{name:'Save in this browser'}).click();await p.waitFo
 ok(await has(p.locator('.fh-place').first(),'PLACE 01 · PG')&&await has(p.locator('.fh-place').first(),'2 / 20'),'PG and ticks survive a reload');
 ok(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),'no horizontal overflow at 390px with PG and flat');
 await p.screenshot({path:'/tmp/pg-cards.png',fullPage:true});
+// deposit in rupees, gut feel saved, sticky progress, bottom of form
+await p.getByRole('button',{name:'+ Add a place'}).first().click();await p.getByRole('radio',{name:'PG'}).click();
+await p.locator('#place-name').fill('Rupee deposit PG');await p.locator('#field-rent').fill('9000');await p.locator('#field-deposit').fill('1');await p.locator('#field-depositRs').fill('18000');
+await p.getByRole('button',{name:'Add to shortlist'}).click();await p.waitForTimeout(200);
+ok(await p.locator('#err-depositRs').isVisible(),'months and rupees together is refused with a message');
+await p.locator('#field-deposit').fill('');await p.getByRole('button',{name:'Add to shortlist'}).click();await p.waitForTimeout(300);
+const rp=p.locator('.fh-place').filter({hasText:'Rupee deposit PG'});
+ok(await has(rp,'₹18,000')&&await has(rp,'₹27,000'),'rupee deposit shows as rupees and feeds cash to move in (9,000 + 18,000)');
+await rp.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-depositRs').inputValue()==='18000'&&await p.locator('#field-deposit').inputValue()==='','edit restores the rupee deposit');
+await p.getByRole('button',{name:'Cancel'}).first().click();
+const first=p.locator('.fh-place').first();ok(await has(first,'Gut feel')&&await has(first,'8'),'gut feel saved as typed (8)');
+await first.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-feel').inputValue()==='8','gut feel survives edit and reload');
+await p.locator('#field-feel').scrollIntoViewIfNeeded();
+await p.locator('.fh-form-panel').screenshot({path:'/tmp/pg-form-full.png'});
+await p.getByRole('button',{name:'Cancel'}).first().click();
+await p.getByRole('tab',{name:'On the visit'}).click();await p.locator('#visit-place').selectOption({label:'Sunrise PG'});
+await p.evaluate(()=>window.scrollTo(0,2200));await p.waitForTimeout(300);
+const sb=await p.locator('.fh-visit-sticky').boundingBox();ok(sb&&sb.y>=0&&sb.y<20&&await p.locator('.fh-visit-sticky').isVisible(),'progress bar stays pinned at the top while scrolled deep in the list (y='+(sb&&Math.round(sb.y))+')');
+await p.screenshot({path:'/tmp/pg-sticky.png'});
+const gi=p.locator('.fh-check-section');for(let i=0;i<5;i++){await gi.nth(i).scrollIntoViewIfNeeded();await gi.nth(i).screenshot({path:`/tmp/pg-group${i+1}.png`});}
+
 console.log('PG CHECKS',n);
 }finally{await b.close();server.kill();}

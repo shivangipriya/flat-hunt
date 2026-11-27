@@ -23,6 +23,7 @@ TypeScript, React, Vite and Tailwind CSS. Tailwind is compiled locally; no runti
 - `tests/model.test.ts`: 118 assertions including V2 parity, malicious/invalid input and saved-tick migration.
 - `tests/browser.mjs`: 25 actual Chrome interaction checks. Install Playwright locally to run it. Uses a local static server and Chrome, no hosted account.
 - `tests/bundle.mjs`: 68 checks at 390px for maintenance, monthly cost, share/copy, the checklist text and saved-tick migration. Run it with Playwright and Chrome after `npm run build`; CI does not run it.
+- `tests/clear-save.mjs`: adds flats with maintenance, edits, clears it and saves, repeated, then saves in the browser and reloads. Prints the rendered cards, form state, stored list and HTTP errors if anything fails. `FH_URL` and `ROUNDS` env vars choose the site and rounds.
 - `tests/pg.mjs`: 42 checks at 390px for the PG variant: add a PG, its 20-check visit list, readable share text, deposit in rupees, saved gut feel, pinned progress bar, edit, reload, and a flat beside it. Same run method as bundle.mjs.
 
 ## Data and privacy

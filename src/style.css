@@ -144,3 +144,6 @@
 .fh-movein{margin-top:28px}
 @media(max-width:600px){.fh-toolbar-actions{justify-content:flex-start;width:100%}}
 .fh-card-actions .fh-copy-wrap button:last-child{margin-left:0;color:inherit}
+
+.fh-io p{margin:10px 0 14px}
+.fh-io .fh-secondary{margin-top:2px}

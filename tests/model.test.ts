@@ -78,7 +78,7 @@ assert.equal(p.maintenance,0);assert.equal(monthlyTotal(p),7500);
 assert.deepEqual(Object.keys(p.checks).sort(),['pg-curfew','pg-food-taste']);
 const t=placeText(p);
 assert.match(t,/^PG hunt: Sunrise PG/);assert.match(t,/PG, 3 sharing, meals included, electricity costs extra, no Wi-Fi/);assert.doesNotMatch(t,/laundry/);
-assert.match(t,/extra charges Rs\.0/);assert.match(t,/cash to move in Rs\.15,000 \(/);
+assert.match(t,/extra charges Rs\.0/);assert.match(t,/known monthly subtotal Rs\.7500 \(rent \+ extra charges entered; electricity costs extra, so the real monthly cost may be higher\)/);assert.doesNotMatch(t,/monthly total/);assert.match(t,/known cash to move in Rs\.15,000 \(subtotal: first month \+ deposit only\. Brokerage not added/);
 assert.match(t,/house rules: Gate closes 10 pm; no overnight guests/);
 assert.match(t,/Visit checklist: 2 of 20 done/);assert.match(t,/checked on the visit: kitchen and a meal, curfew and visitor rules \(2 of 20\)\. The rest are not checked yet/);
 assert.doesNotMatch(t,/not tick|failed/i);
@@ -92,4 +92,17 @@ assert.equal(f.kind,undefined);assert.equal(f.sharing,undefined);assert.equal(f.
 test('PG list has 20 checks in 5 groups with unique ids that match',()=>{
 assert.equal(new Set(PG_CHECK_IDS.flat()).size,20);assert.deepEqual(PG_CHECK_IDS.map(g=>g.length),PG_VISIT.map(g=>g[1].length));
 for(const id of [...CHECK_IDS.flat(),...PG_CHECK_IDS.flat()])assert.ok(SHORT[id],'short name for '+id);
+});
+
+test('deposit in rupees: used for cash, shown as rupees, not both with months, old month data kept',()=>{
+const a=sanitizeList([{name:'R',kind:'pg',rent:8000,depositRs:15000,brokerage:0}]).places[0];
+assert.equal(a.depositRs,15000);assert.equal(a.deposit,null);assert.equal(upfront(a),23000);assert.match(placeText(a),/deposit Rs\.15000/);assert.match(placeText(a),/cash to move in Rs\.23,000/);
+const f=sanitizeList([{name:'F',rent:20000,deposit:2,brokerage:1}]).places[0];assert.equal(f.depositRs,undefined);assert.equal(upfront(f),80000);
+const both=validateDraft({...draftFrom(f),depositRs:'5000'});assert.ok(both.errors.depositRs);
+const only=validateDraft({...draftFrom(a)});assert.equal(only.errors.depositRs,undefined);assert.equal(only.place!.depositRs,15000);
+assert.deepEqual(sanitizeList(decode(encode([a]))!.places).places[0].depositRs,15000);
+});
+test('PG with no costs-extra service shows a plain monthly total; unknown extra charges stay unknown',()=>{
+const p=sanitizeList([{name:'P',kind:'pg',rent:6000,maintenance:500,meals:'included',wifi:'included'}]).places[0];assert.match(placeText(p),/monthly total Rs\.6500/);assert.doesNotMatch(placeText(p),/subtotal/);
+const q=sanitizeList([{name:'Q',kind:'pg',rent:6000,electricity:'extra'}]).places[0];assert.equal(monthlyTotal(q),null);assert.doesNotMatch(placeText(q),/monthly/);
 });

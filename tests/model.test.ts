@@ -14,3 +14,18 @@ test('sanitize reassigns duplicate ids and counts skips',()=>{const r=sanitizeLi
 test('invalid input blocks save without discarding draft',()=>{const d={...emptyDraft(),name:'A',rent:'-1'};assert.equal(validateDraft(d).place,null);assert.ok(validateDraft(d).errors.rent);assert.equal(d.rent,'-1');});
 test('blank name has visible validation',()=>assert.ok(validateDraft(emptyDraft()).errors.name));
 test('blank is distinct from zero',()=>{const p=validateDraft({...emptyDraft(),name:'A',rent:'0'}).place!;assert.equal(p.rent,0);assert.equal(p.deposit,null);});
+
+import {samplePlaces} from '../src/model';
+test('shipped examples are flagged and survive sanitize/encode/decode',()=>{
+  assert.ok(samplePlaces.every(p=>p.example===true));
+  const r=sanitizeList(samplePlaces);assert.ok(r.places.every(p=>p.example===true));
+  const d=decode(encode(r.places));assert.ok(d&&d.places.every(p=>p.example===true));
+});
+test('unflagged saved places are never treated as examples, even if they match a shipped example',()=>{
+  const legacy=samplePlaces.map(({example,...p})=>p);
+  assert.ok(sanitizeList(legacy).places.every(p=>p.example===undefined));
+});
+test('a real entry cannot gain the example flag by accident',()=>{
+  const p=sanitizePlace({name:'Koramangala 2BHK',rent:30000})!;assert.equal(p.example,undefined);
+  assert.equal(sanitizePlace({name:'x',example:'yes'})!.example,undefined);
+});

@@ -88,5 +88,13 @@ ok(card.includes("Excludes maintenance and moving costs"),'cash to move in label
 await p.getByRole('tab',{name:'On the visit'}).click();await p.locator('.fh-check input').nth(4).check();await p.reload();await p.waitForTimeout(500);
 const saved=await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('flathunt-v2')).places[0].checks).sort());
 ok(saved.includes('bathroom')&&saved.every(k=>!/^\d-\d$/.test(k)),'saved keys are stable ids: '+saved.join(','));
+// importing an old export: same migration, same honest notice
+await p.getByRole('tab',{name:'Shortlist'}).click();
+await p.getByRole('button',{name:'Import / view text'}).click();
+const exp=await p.evaluate(()=>btoa(unescape(encodeURIComponent(JSON.stringify({places:[{id:1,name:'Imported old',rent:15000,checks:{'0-0':true,'2-0':true,'3-1':true}}]})))));
+await p.locator('#export-text').fill(exp);
+await p.getByRole('button',{name:'Replace list from export'}).click();await p.waitForTimeout(300);
+ok((await p.locator('#root').innerText()).includes('2 visit ticks from the older export were cleared'),'old export import says 2 ticks were cleared');
+ok((await p.locator('.fh-place').innerText()).includes('1 / 20'),'imported old export keeps only the unchanged tick (1 / 20)');
 console.log('BUNDLE CHECKS',n);
 }finally{await b.close();server.kill();}

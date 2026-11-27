@@ -60,3 +60,55 @@ export const LEGACY_TICKS: Record<string,string|null> = {
   "3-0":null,"3-1":null,"3-2":"rent-increase","3-3":null,
   "4-0":"street-lighting","4-1":null,"4-2":"guest-parking-rules","4-3":"flood"
 }
+
+// PG: its own 20 checks in five groups, with their own stable ids.
+export const PG_VISIT: [string,string[]][] = [
+  ["Room & bed", [
+    "Bed, mattress and cupboard are in good shape. Ask who else sleeps in the room (the sharing type)",
+    "Window, ventilation and daylight in the room you will actually get, not just the model room",
+    "Fan, lights, sockets and AC (if promised) all work. Count the charging points per bed",
+    "Room door lock, and a lockable cupboard or drawer for your things"
+  ]],
+  ["Bathroom & water", [
+    "How many people share one bathroom? Check flush, drainage and hot water",
+    "Bathrooms and common areas look clean right now, not only the room shown",
+    "Water supply timing, and drinking water (RO or filter) available",
+    "Look for damp patches and pest signs in the room and the common areas"
+  ]],
+  ["Food & kitchen", [
+    "See the kitchen and taste a meal if you can. Note the hygiene",
+    "Ask for the menu, meal timings and what happens if you skip a meal. Get it in writing",
+    "Check that your diet is catered for (vegetarian, no onion-garlic, fasting days)",
+    "Can residents use a fridge, kettle or kitchen, or is it not allowed?"
+  ]],
+  ["Safety & rules", [
+    "Who controls entry: guard, CCTV or biometric? Who can walk in?",
+    "Curfew, visitor and overnight guest rules. Ask for them in writing",
+    "Fire exit and extinguisher visible. Is there a second way out?",
+    "Street lighting and the walk from the main road at night"
+  ]],
+  ["Daily life & money", [
+    "Wi-Fi works in your room (test a call or a speed test). Ask how many share it",
+    "Power backup: does it cover your room's fan and lights?",
+    "Laundry: machine, washerman or buckets only? Any extra charge?",
+    "Extra charges in writing: electricity, AC, food, laundry. Also the notice period and when the deposit comes back"
+  ]]
+]
+export const PG_CHECK_IDS: string[][] = [
+  ["pg-bed","pg-ventilation","pg-electricals","pg-room-lock"],
+  ["pg-bath-count","pg-bath-clean","pg-water","pg-damp"],
+  ["pg-food-taste","pg-food-menu","pg-food-diet","pg-fridge"],
+  ["pg-entry","pg-curfew","pg-fire","pg-night-walk"],
+  ["pg-wifi","pg-backup","pg-laundry","pg-charges"]
+]
+// Short names, used only in the text a renter shares, so a flatmate or parent can see what was checked.
+export const SHORT: Record<string,string> = {
+  "taps":"taps and hot water","water-timing":"water timing","power-backup":"power backup","meter":"meter type","bathroom":"bathroom","electricals":"electricals",
+  "damp":"damp","ventilation":"ventilation","pests":"pests","balcony":"balcony/drying space","signal-broadband":"signal and broadband","noise":"noise","kitchen":"kitchen","storage-fittings":"storage and fittings",
+  "rent-includes":"what rent includes","rent-increase":"rent increase","street-lighting":"street lighting","locks-entry":"locks and entry","guest-parking-rules":"guest and parking rules","flood":"flooding history",
+  "pg-bed":"bed and sharing","pg-ventilation":"room light and air","pg-electricals":"fan, lights and sockets","pg-room-lock":"room lock and cupboard",
+  "pg-bath-count":"bathroom sharing","pg-bath-clean":"cleanliness","pg-water":"water and drinking water","pg-damp":"damp and pests",
+  "pg-food-taste":"kitchen and a meal","pg-food-menu":"menu and timings","pg-food-diet":"diet fit","pg-fridge":"fridge and kitchen use",
+  "pg-entry":"entry control","pg-curfew":"curfew and visitor rules","pg-fire":"fire exit","pg-night-walk":"street at night",
+  "pg-wifi":"Wi-Fi","pg-backup":"power backup","pg-laundry":"laundry","pg-charges":"extra charges in writing"
+}

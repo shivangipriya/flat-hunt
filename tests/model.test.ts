@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks} from '../src/model';
+import {cleanNumber,ranges,fields,sanitizePlace,sanitizeList,encode,decode,summary,validateDraft,emptyDraft,totalChecks,upfront} from '../src/model';
 const require=createRequire(import.meta.url);const old=require('../reference/core.cjs');
 test('checklist has the same 20 items',()=>assert.equal(totalChecks,old.totalChecks()));
 for(const field of fields)for(const value of [null,undefined,'',0,'0',1,'1',-1,'abc',NaN,Infinity,1e9,'  2.5  '])test(`${field} numeric parity ${String(value)}`,()=>assert.equal(cleanNumber(value,ranges[field]),old.cleanNumber(value,old.RANGES[field])));
@@ -29,3 +29,5 @@ test('a real entry cannot gain the example flag by accident',()=>{
   const p=sanitizePlace({name:'Koramangala 2BHK',rent:30000})!;assert.equal(p.example,undefined);
   assert.equal(sanitizePlace({name:'x',example:'yes'})!.example,undefined);
 });
+
+test('move-in cash = first month + deposit + brokerage, only when all three are known',()=>{const p=sanitizeList([{name:'A',rent:20000,deposit:2,brokerage:1}]).places[0];assert.equal(upfront(p),80000);assert.equal(upfront({...p,deposit:null}),null);assert.equal(upfront({...p,brokerage:null}),null);assert.equal(upfront({...p,rent:null}),null);assert.equal(upfront({...p,deposit:0,brokerage:0}),20000);});

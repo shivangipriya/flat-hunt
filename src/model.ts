@@ -13,6 +13,7 @@ export function sanitizePlace(value:unknown):Place|null {if(!value||typeof value
 export function sanitizeList(list:unknown[]):{places:Place[];skipped:number}{const places:Place[]=[];for(const x of list){const p=sanitizePlace(x);if(p)places.push({...p,id:places.length+1});}return{places,skipped:list.length-places.length};}
 export function validateDraft(d:Draft):{place:Place|null;errors:Partial<Record<keyof Draft,string>>}{const errors:Partial<Record<keyof Draft,string>>={};if(!d.name.trim())errors.name='Give this place a name or landmark.';for(const f of fields)if(d[f].trim()!==''&&cleanNumber(d[f],ranges[f])===null)errors[f]=`Enter ${ranges[f][0]} to ${ranges[f][1]}, or leave blank.`;return{place:Object.keys(errors).length?null:sanitizePlace(d),errors};}
 export const countChecks=(p:Place)=>Object.values(p.checks).filter(Boolean).length;
+export const upfront=(p:Place):number|null=>p.rent===null||p.deposit===null||p.brokerage===null?null:Math.round(p.rent*(1+p.deposit+p.brokerage));
 export const display=(n:number|null,suffix='')=>n===null?'Not added':`${n.toLocaleString('en-IN')}${suffix}`;
 export function encode(places:Place[]):string{return btoa(unescape(encodeURIComponent(JSON.stringify({places}))));}
 export function decode(text:string):{places:Place[];skipped:number}|null {try{const t=text.trim();if(!t||t.length>200000)return null;const obj=JSON.parse(decodeURIComponent(escape(atob(t))));if(!obj||!Array.isArray(obj.places))return null;const out=sanitizeList(obj.places);return obj.places.length&&!out.places.length?null:out;}catch{return null;}}

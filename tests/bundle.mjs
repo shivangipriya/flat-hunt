@@ -90,20 +90,36 @@ const saved=await p.evaluate(()=>Object.keys(JSON.parse(localStorage.getItem('fl
 ok(saved.includes('bathroom')&&saved.every(k=>!/^\d-\d$/.test(k)),'saved keys are stable ids: '+saved.join(','));
 // importing an old export: same migration, same honest notice
 await p.getByRole('tab',{name:'Shortlist'}).click();
-await p.getByRole('button',{name:'Restore from text'}).click();
+await p.getByRole('button',{name:'Backup and restore'}).click();
 const exp=await p.evaluate(()=>btoa(unescape(encodeURIComponent(JSON.stringify({places:[{id:1,name:'Imported old',rent:15000,checks:{'0-0':true,'2-0':true,'3-1':true}}]})))));
 await p.locator('#export-text').fill(exp);
 await p.getByRole('button',{name:'Replace my list with this text'}).click();await p.waitForTimeout(300);
 ok(await has(p.locator('#root'),'2 visit ticks from the older export were cleared'),'old export import says 2 ticks were cleared');
 ok(await has(p.locator('.fh-place'),'1 / 20'),'imported old export keeps only the unchanged tick (1 / 20)');
-// copy my list: readable message, and the whole message restores the list
+// share text is readable only; backup code is separate and restores the list
 await p.getByRole('tab',{name:'Shortlist'}).click();
-await p.getByRole('button',{name:'Hide text box'}).click().catch(()=>{});
-await p.getByRole('button',{name:'Copy my list'}).click();await p.waitForTimeout(300);
+await p.getByRole('button',{name:'Copy my list as text'}).click();await p.waitForTimeout(300);
 const clipTxt=await p.evaluate(()=>navigator.clipboard.readText());
-ok(clipTxt.startsWith('Flat hunt comparison:')&&clipTxt.includes('Imported old')&&clipTxt.includes('Flat Hunt backup code'),'copied list starts readable, with a labelled backup code');
-await p.getByRole('button',{name:'Restore from text'}).click();await p.locator('#export-text').fill(clipTxt);
+ok(clipTxt.startsWith('Flat hunt comparison:')&&clipTxt.includes('Imported old')&&!/eyJ[A-Za-z0-9+\/=]{20,}/.test(clipTxt),'copied list is readable text with no backup code in it');
+if(!(await p.locator('#export-text').isVisible()))await p.getByRole('button',{name:'Backup and restore'}).click();
+await p.getByRole('button',{name:'Copy backup code'}).click();await p.waitForTimeout(300);
+const bk=await p.evaluate(()=>navigator.clipboard.readText());
+ok(bk.startsWith('Flat Hunt backup code')&&/eyJ[A-Za-z0-9+\/=]{20,}/.test(bk),'backup is a separately labelled code');
+await p.locator('#export-text').fill(bk);
 await p.getByRole('button',{name:'Replace my list with this text'}).click();await p.waitForTimeout(300);
-ok(await has(p.locator('.fh-place'),'Imported old')&&await has(p.locator('.fh-place'),'1 / 20'),'pasting the whole copied message restores the place and its tick');
+ok(await has(p.locator('.fh-place'),'Imported old')&&await has(p.locator('.fh-place'),'1 / 20'),'pasting the backup restores the place and its tick');
+await p.locator('#export-text').fill(clipTxt);await p.getByRole('button',{name:'Replace my list with this text'}).click();await p.waitForTimeout(300);
+ok(await has(p.locator('#root'),'Could not read this text'),'readable share text is not accepted as a backup and the list is kept');
+ok(await has(p.locator('.fh-place'),'Imported old'),'list unchanged after a failed restore');
+// persistence status and first-use path
+ok(await has(p.locator('#root'),'Saved in this browser only'),'a list that came from saved data shows saved status');
+await p.getByLabel('Remember in this browser').uncheck();
+ok(await has(p.locator('#root'),'Not saved yet'),'unsaved list shows a visible warning');
+await p.getByRole('button',{name:'Save in this browser'}).click();await p.waitForTimeout(300);
+ok(await has(p.locator('#root'),'Saved in this browser only'),'saved list shows its status');
+ok(await p.evaluate(()=>!!localStorage.getItem('flathunt-v2')),'saving wrote the list');
+await p.evaluate(()=>localStorage.clear());await p.reload();await p.waitForTimeout(400);
+ok(await p.locator('.fh-steps li').count()===4,'first-use path has 4 steps');
+ok(await has(p.locator('.fh-steps'),'Copy the list to share it'),'last step is share and save');
 console.log('BUNDLE CHECKS',n);
 }finally{await b.close();server.kill();}

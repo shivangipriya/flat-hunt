@@ -156,3 +156,8 @@
 .fh-backup .fh-io label{display:block;margin:12px 0 6px}
 .fh-backup .fh-io textarea{min-height:64px}
 .fh-backup>.fh-text{color:#f4e7c6}
+
+.fh-kind{display:flex;gap:8px}
+.fh-kind button{flex:1;min-height:44px;border:1.5px solid #9db8a8;border-radius:12px;background:#fff;color:#123f33;font:inherit;font-weight:600}
+.fh-kind button.fh-kind-on{background:#123f33;color:#fff;border-color:#123f33}
+.fh-field select{width:100%;min-height:44px;border:1.5px solid #9db8a8;border-radius:10px;padding:8px 10px;font:inherit;background:#fff}

@@ -19,7 +19,7 @@ ok(await has(p.locator('#root'),'Saved automatically in this browser only'),'sta
 await p.reload();await p.waitForTimeout(400);
 ok(await p.locator('.fh-place').count()===1&&await has(p.locator('.fh-place').first(),'₹19,200'),'added place survives reload with its total');
 // edit
-await p.getByRole('button',{name:'Edit'}).click();await p.locator('#field-rent').fill('17500');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(400);await p.reload();await p.waitForTimeout(400);
+await p.getByRole('button',{name:/^Edit/}).click();await p.locator('#field-rent').fill('17500');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(400);await p.reload();await p.waitForTimeout(400);
 ok(await has(p.locator('.fh-place').first(),'₹17,500'),'edit survives reload');
 // visit note and tick
 await p.getByRole('tab',{name:/visit/i}).click();await p.waitForTimeout(300);
@@ -38,7 +38,7 @@ ok(await has(p.locator('#root'),'Saving is off')&&!(await p.locator('.fh-remembe
 ok(await p.locator('.fh-place').count()===1,'erase keeps the current list on screen');
 await p.screenshot({path:'/tmp/auto-2-erased.png'});
 // not silently resaving
-await p.getByRole('button',{name:'Edit'}).click();await p.locator('#field-rent').fill('17000');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(400);
+await p.getByRole('button',{name:/^Edit/}).click();await p.locator('#field-rent').fill('17000');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(400);
 await p.getByRole('tab',{name:/visit/i}).click();await p.locator('#visit-note').fill('changed after erase');await p.waitForTimeout(300);
 ok((await store(p)).data===null,'edits after erase are not written to the browser');
 await p.reload();await p.waitForTimeout(400);

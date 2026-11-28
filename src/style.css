@@ -162,3 +162,14 @@
 .fh-kind button.fh-kind-on{background:#123f33;color:#fff;border-color:#123f33}
 .fh-field select{width:100%;min-height:44px;border:1.5px solid #9db8a8;border-radius:10px;padding:8px 10px;font:inherit;background:#fff}
 .fh-hint{margin:4px 0 0;font-size:.85rem;color:#4a5a52}
+
+.fh-place:focus{outline:none}
+.fh-visit-note{margin:14px 0 6px}.fh-visit-note label{display:block;font-weight:600;margin-bottom:6px}.fh-visit-note label span{font-weight:400;font-size:.85rem;color:#4a5a52}
+.fh-visit-note textarea{width:100%;min-height:76px;border:1.5px solid #9db8a8;border-radius:10px;padding:10px;background:#fff}
+.fh-compare{margin:0 0 18px}.fh-compare h3{margin:0 0 8px;font-size:1rem}.fh-compare h3 span{font-weight:400;font-size:.82rem;color:#4a5a52;margin-left:6px}
+.fh-compare ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.fh-compare button{width:100%;text-align:left;display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;background:#fff;border:1.5px solid #c9d8cf;border-radius:12px;padding:10px 12px;min-height:44px;color:#123f33}
+.fh-compare button b{grid-column:1/-1;font-size:.98rem}.fh-compare button span{font-size:.85rem;color:#33463d}
+.fh-place{scroll-margin-top:12px}
+
+[role=tabpanel]{scroll-margin-top:8px}

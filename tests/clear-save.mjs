@@ -27,7 +27,7 @@ for(let r=1;r<=ROUNDS;r++){
  good=await waitText('.fh-place:has-text("Flat '+r+'")','Add maintenance to see it');if(!good)await dump('clear '+r+' fieldAfterFill='+v);ok(good,'round '+r+': cleared maintenance shows unknown, form closed: '+(await p.locator('.fh-form-panel').count()===0));
 }
 // persistence: save in this browser, reload, still unknown, not 0
-await p.getByRole('button',{name:'Save in this browser'}).click();await p.waitForTimeout(300);
+if(await p.getByRole('button',{name:'Turn saving on'}).count())await p.getByRole('button',{name:'Turn saving on'}).click();await p.waitForTimeout(300);
 await p.reload();await p.waitForTimeout(500);
 const all=await p.locator('.fh-place').allInnerTexts();
 ok(all.length===ROUNDS&&all.every(t=>t.includes('Add maintenance to see it')&&!t.includes('₹20,000 ')||true)&&all.every(t=>t.includes('Add maintenance to see it')),'after save and reload all '+ROUNDS+' places still show maintenance unknown');

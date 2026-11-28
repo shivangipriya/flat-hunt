@@ -49,7 +49,7 @@ await p.getByRole('button',{name:'Edit'}).first().click();
 ok(await p.getByRole('radio',{name:'PG'}).getAttribute('aria-checked')==='true'&&await p.locator('#pg-sharing').inputValue()==='triple'&&await p.locator('#pg-rules').inputValue()==='Gate closes 10 pm. No overnight guests.','edit form restores PG type, sharing and rules');
 await p.locator('#pg-laundry').selectOption('no');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(300);
 ok(await has(p.locator('.fh-place').first(),'Not available')&&await has(p.locator('.fh-place').first(),'2 / 20'),'edit adds laundry and keeps both ticks');
-await p.getByRole('button',{name:'Save in this browser'}).click();await p.waitForTimeout(300);await p.reload();await p.waitForTimeout(500);
+if(await p.getByRole('button',{name:'Turn saving on'}).count())await p.getByRole('button',{name:'Turn saving on'}).click();await p.waitForTimeout(300);await p.reload();await p.waitForTimeout(500);
 ok(await has(p.locator('.fh-place').first(),'PLACE 01 · PG')&&await has(p.locator('.fh-place').first(),'2 / 20'),'PG and ticks survive a reload');
 ok(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),'no horizontal overflow at 390px with PG and flat');
 await p.screenshot({path:'/tmp/pg-cards.png',fullPage:true});

@@ -19,7 +19,7 @@ for(let r=1;r<=ROUNDS;r++){
  await p.getByRole('button',{name:'Add to shortlist'}).click();
  let good=await waitText('.fh-place:last-of-type','₹21,500');if(!good)await dump('add '+r);ok(good,'round '+r+': added with maintenance, total 21,500');
  const card=p.locator('.fh-place').filter({hasText:'Flat '+r});
- await card.getByRole('button',{name:'Edit'}).click();
+ await card.getByRole('button',{name:/^Edit/}).click();
  good=(await p.locator('#field-maintenance').inputValue())==='1500';if(!good)await dump('edit '+r);ok(good,'round '+r+': edit form shows 1500');
  await p.locator('#field-maintenance').fill('');
  const v=await p.locator('#field-maintenance').inputValue();

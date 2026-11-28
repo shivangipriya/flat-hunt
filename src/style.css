@@ -175,3 +175,26 @@
 [role=tabpanel]{scroll-margin-top:8px}
 .fh-story-fig video{display:block;margin:0 auto;max-width:100%;height:auto;border-radius:8px;border:1px solid var(--fh-line);background:#111}.fh-story .fh-story-sign{font-size:18px;margin-top:6px}
 .fh-app .fh-story h1{margin-bottom:26px}
+
+/* Usability and contrast pass (same green and yellow identity, no new colours) */
+.fh-main .fh-eyebrow,.fh-place .fh-place-number{color:#a04a1b}
+.fh-place .fh-place-number{font-size:12px}
+.fh-header-note{font-size:12px}
+.fh-tabs button>span{font-size:12px}
+.fh-callout{line-height:1.5}
+.fh-callout .fh-text{min-height:44px;display:inline-flex;align-items:center}
+.fh-hero .fh-story-link,.fh-footer a{display:inline-flex;align-items:center;min-height:44px}
+.fh-footer p{display:flex;flex-wrap:wrap;column-gap:6px;align-items:center}
+@media(max-width:600px){
+ .fh-pill{font-size:11px;padding:6px 9px}
+ .fh-tabs button>span{font-size:12px}
+ .fh-hero.fh-hero-compact{padding:18px 20px 20px}
+ .fh-hero.fh-hero-compact .fh-eyebrow,.fh-hero.fh-hero-compact .fh-intro{display:none}
+ .fh-hero.fh-hero-compact h1{font-size:28px;margin:0 0 14px;letter-spacing:-.8px}
+ .fh-hero.fh-hero-compact .fh-small{margin-top:4px}
+}
+.fh-main .fh-save .fh-eyebrow{color:var(--fh-sun)}
+.fh-wordmark{display:inline-flex;align-items:center;min-height:44px}
+@media(max-width:600px){.fh-pill{font-size:12px}}
+.fh-callout .fh-text{display:inline;min-height:0;padding:0;margin-left:6px;position:relative}
+.fh-callout .fh-text::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}

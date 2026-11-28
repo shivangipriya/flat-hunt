@@ -255,3 +255,5 @@ body,.fh-app{font-optical-sizing:auto}
 .fh-save .fh-secondary,.fh-app .fh-save .fh-secondary{background:transparent;border-color:#fffaf0;color:#fffaf0}
 @media(max-width:360px){.fh-header{gap:8px}.fh-wordmark{font-size:20px}.fh-pill{white-space:normal;text-align:center;max-width:118px;line-height:1.25;font-size:12px}}
 .fh-app .fh-story h1{font-size:clamp(28px,6vw,44px);font-weight:650;line-height:1.1}
+
+.fh-header{flex-wrap:wrap;row-gap:10px}.fh-pill{white-space:normal;line-height:1.3}

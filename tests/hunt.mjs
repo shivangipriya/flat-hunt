@@ -55,7 +55,7 @@ await p.locator('#visit-place').selectOption({label:'Ankit Tower 1BHK'});await p
 ok((await p.locator('#visit-note').inputValue()).includes('Water only 6 to 8 am'),name+': visit note stays with its place after switching places');
 await p.getByRole('tab',{name:'Your shortlist'}).click();await w(300);
 ok(await has(p.locator('#place-1'),'Water only 6 to 8 am'),name+': visit note appears on the card');
-await p.locator('#place-1').getByRole('button',{name:'Edit'}).click();await w(300);
+await p.locator('#place-1').getByRole('button',{name:/^Edit/}).click();await w(300);
 ok((await p.locator('#place-notes').inputValue()).includes('Water only 6 to 8 am'),name+': the same text is in the Edit form notes field');
 await p.locator('#place-name').fill('Sai Residency 2BHK (rent 18000)');await p.locator('#place-name').press('Enter');await w(400);
 ok(await inView('#place-1'),name+': card on screen after an edit and save');

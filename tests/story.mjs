@@ -12,7 +12,7 @@ try{
   ok(await p.evaluate(()=>{const c=getComputedStyle(document.querySelector('.fh-story h1')).color.match(/\d+/g).map(Number);return (c[0]+c[1]+c[2])/3<110;}),'title is dark on light '+w);ok(await p.locator('h1').innerText()==='I built Flat Hunt because a nice balcony wipes your memory','title '+w);
   ok(await p.evaluate(()=>document.documentElement.scrollWidth)<=w,'no horizontal overflow '+w);
   ok((await p.locator('.fh-story-fig img').count())===3,'three figures');ok(await p.evaluate(()=>[...document.querySelectorAll('.fh-story-fig img')].every(i=>i.complete&&i.naturalWidth>0)),'images load');
-  ok((await p.locator('.fh-story p').allInnerTexts()).join(' ').includes('The “remember” box only decides whether your browser keeps the notes'),'privacy wording');
+  ok((await p.locator('.fh-story p').allInnerTexts()).join(' ').includes('They are saved in this browser so a phone call or a reload does not wipe them'),'privacy wording');
   ok(await p.locator('.fh-story-footer a[href="https://www.linkedin.com/in/shivangii-priyaa"]').count()===1,'linkedin link');
   ok(await p.locator('.fh-story-footer a[href="https://github.com/shivangipriya/flat-hunt"]').count()===1,'github link');
   await p.click('text=← Back to the notebook');await p.waitForSelector('.fh-tabs');

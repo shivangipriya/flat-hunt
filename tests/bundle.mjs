@@ -112,11 +112,11 @@ await p.locator('#export-text').fill(clipTxt);await p.getByRole('button',{name:'
 ok(await has(p.locator('#root'),'Could not read this text'),'readable share text is not accepted as a backup and the list is kept');
 ok(await has(p.locator('.fh-place'),'Imported old'),'list unchanged after a failed restore');
 // persistence status and first-use path
-ok(await has(p.locator('#root'),'Saved in this browser only'),'a list that came from saved data shows saved status');
+ok(await has(p.locator('#root'),'Saved automatically in this browser only'),'a list that came from saved data shows saved status');
 await p.getByLabel('Remember in this browser').uncheck();
-ok(await has(p.locator('#root'),'Not saved yet'),'unsaved list shows a visible warning');
-await p.getByRole('button',{name:'Save in this browser'}).click();await p.waitForTimeout(300);
-ok(await has(p.locator('#root'),'Saved in this browser only'),'saved list shows its status');
+ok(await has(p.locator('#root'),'Saving is off'),'unsaved list shows a visible warning');
+if(await p.getByRole('button',{name:'Turn saving on'}).count())await p.getByRole('button',{name:'Turn saving on'}).click();await p.waitForTimeout(300);
+ok(await has(p.locator('#root'),'Saved automatically in this browser only'),'saved list shows its status');
 ok(await p.evaluate(()=>!!localStorage.getItem('flathunt-v2')),'saving wrote the list');
 await p.evaluate(()=>localStorage.clear());await p.reload();await p.waitForTimeout(400);
 ok(await p.locator('.fh-steps li').count()===4,'first-use path has 4 steps');

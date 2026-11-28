@@ -17,7 +17,7 @@ export function Story(){
    <p>It says “Not added” when you leave a number blank. Never 0. A deposit of zero and a deposit nobody mentioned are two different flats, and I did not want a tool that blurs them politely.</p>
    <p>It does not score your flats. A score needs weights, and the weights would be mine. If you hate noise and do not care about balconies, a number from me is just a guess with decimals.</p>
    <p>It keeps the checklist to twenty points in five groups, so you can finish it while standing in someone else’s kitchen.</p>
-   <p>And your notes stay in your browser. They are not sent anywhere, and Flat Hunt does not need to know where you live. The “remember” box only decides whether your browser keeps the notes after you close the tab. Leave it unticked and they disappear.</p>
+   <p>And your notes stay in your browser. They are not sent anywhere, and Flat Hunt does not need to know where you live. They are saved in this browser so a phone call or a reload does not wipe them. Tap “Erase saved copy” or untick “Remember in this browser” and the saved copy is removed.</p>
    <p>The last section is for before you pay a token: see the draft agreement, get a written receipt, ask for the refund terms in writing, video call from inside the flat if you are not there.</p>
    {img('brick','A man talking to a brick wall','Asking for the refund terms in writing.')}
    <p>Asking is not rude. It is also a fast way to find out how an owner behaves when asked for things in writing.</p>

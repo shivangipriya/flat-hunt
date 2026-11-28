@@ -24,6 +24,7 @@ TypeScript, React, Vite and Tailwind CSS. Tailwind is compiled locally; no runti
 - `tests/browser.mjs`: 25 actual Chrome interaction checks. Install Playwright locally to run it. Uses a local static server and Chrome, no hosted account.
 - `tests/bundle.mjs`: 68 checks at 390px for maintenance, monthly cost, share/copy, the checklist text and saved-tick migration. Run it with Playwright and Chrome after `npm run build`; CI does not run it.
 - `tests/clear-save.mjs`: adds flats with maintenance, edits, clears it and saves, repeated, then saves in the browser and reloads. Prints the rendered cards, form state, stored list and HTTP errors if anything fails. `FH_URL` and `ROUNDS` env vars choose the site and rounds.
+- `tests/focus.mjs`: 20 rounds of opening Edit and typing straight away; checks the entry stays in its own field and the invalid-maintenance message shows. Guards against delayed focus moves stealing typing. It can miss the fault on some rounds, so a pass is evidence, not proof.
 - `tests/hunt.mjs`: 42 checks on a hunt at 390x844 and 360x640: Enter-to-add, the new card scrolled into view and focused, PG questions before deposit, the at-a-glance list, checks on screen after opening the visit tab, a note written on the visit tab, tapping check text, edit keeping ticks and notes.
 - `tests/pg.mjs`: 42 checks at 390px for the PG variant: add a PG, its 20-check visit list, readable share text, deposit in rupees, saved gut feel, pinned progress bar, edit, reload, and a flat beside it. Same run method as bundle.mjs.
 

@@ -1,0 +1,13 @@
+# Flat Hunt
+
+> A free notebook for flat and PG hunting in Indian cities. Add the places you visit, compare rent, deposit, lock-in, commute and brokerage side by side, tick a 20-point visit checklist per place, and read the questions to ask before paying a token. No account, no listings, no ranking. Entries stay in your browser.
+
+## Pages
+- [Flat Hunt app](https://flat-hunt.pages.dev/): the notebook itself.
+- [Flat visit checklist for India](https://flat-hunt.pages.dev/flat-visit-checklist/): the 20 checks and the token-money questions, as plain text.
+- [Source code](https://github.com/shivangipriya/flat-hunt): TypeScript and React, open source.
+
+## Facts
+- Made by Shivangi Priya (https://www.linkedin.com/in/shivangii-priyaa). Early version.
+- Free. No sign-up. The app does not upload your notes automatically, and it does not import or store photos or messages.
+- Blank numbers show "Not added", never 0. The app never scores or ranks places.

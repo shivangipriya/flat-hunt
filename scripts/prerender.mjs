@@ -1,0 +1,11 @@
+import {createServer} from 'vite';
+import {readFileSync,writeFileSync} from 'fs';
+import {createRequire} from 'module';
+const require=createRequire(process.cwd()+'/');
+const React=require('react');const {renderToString}=require('react-dom/server');
+const v=await createServer({root:process.cwd(),server:{middlewareMode:true},appType:'custom',logLevel:'silent',optimizeDeps:{noDiscovery:true,include:[]},ssr:{external:['react','react-dom']}});
+const {App}=await v.ssrLoadModule('/src/App.tsx');
+const html=renderToString(React.createElement(App));
+const f='dist/index.html';let t=readFileSync(f,'utf8');
+if(!t.includes('<!--app-html-->'))throw new Error('placeholder missing');
+writeFileSync(f,t.replace('<!--app-html-->',html));console.log('prerendered',html.length);await v.close();process.exit(0);

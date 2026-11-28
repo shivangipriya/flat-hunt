@@ -107,3 +107,5 @@ const p=sanitizeList([{name:'P',kind:'pg',rent:6000,maintenance:500,meals:'inclu
 const u=sanitizeList([{name:'U',kind:'pg',rent:6000,maintenance:500,meals:'included'}]).places[0];assert.match(placeText(u),/known monthly subtotal Rs\.6500 \(rent \+ extra charges entered; electricity, Wi-Fi, laundry not asked yet, so the real monthly cost may be higher\)/);assert.doesNotMatch(placeText(u),/monthly total/);
 const q=sanitizeList([{name:'Q',kind:'pg',rent:6000,electricity:'extra'}]).places[0];assert.equal(monthlyTotal(q),null);assert.doesNotMatch(placeText(q),/monthly/);
 });
+
+test('negative zero is stored as plain zero',()=>{assert.ok(Object.is(cleanNumber('-0',ranges.rent),0));assert.ok(Object.is(cleanNumber(-0,ranges.rent),0));});

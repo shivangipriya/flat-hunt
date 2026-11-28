@@ -45,7 +45,7 @@ await p.getByRole('button',{name:'Share Sunrise PG'}).click();await p.waitForTim
 const pgone=await p.evaluate(()=>navigator.clipboard.readText());
 ok(pgone.startsWith('PG hunt: Sunrise PG')&&pgone.includes('house rules:')&&pgone.includes('checked on the visit:')&&!pgone.includes('Vijay'),'single PG share text is self-contained');
 // edit keeps everything
-await p.getByRole('button',{name:'Edit'}).first().click();
+await p.getByRole('button',{name:/^Edit/}).first().click();
 ok(await p.getByRole('radio',{name:'PG'}).getAttribute('aria-checked')==='true'&&await p.locator('#pg-sharing').inputValue()==='triple'&&await p.locator('#pg-rules').inputValue()==='Gate closes 10 pm. No overnight guests.','edit form restores PG type, sharing and rules');
 await p.locator('#pg-laundry').selectOption('no');await p.getByRole('button',{name:'Save changes'}).click();await p.waitForTimeout(300);
 ok(await has(p.locator('.fh-place').first(),'Not available')&&await has(p.locator('.fh-place').first(),'2 / 20'),'edit adds laundry and keeps both ticks');
@@ -61,10 +61,10 @@ ok(await p.locator('#err-depositRs').isVisible(),'months and rupees together is 
 await p.locator('#field-deposit').fill('');await p.getByRole('button',{name:'Add to shortlist'}).click();await p.waitForTimeout(300);
 const rp=p.locator('.fh-place').filter({hasText:'Rupee deposit PG'});
 ok(await has(rp,'₹18,000')&&await has(rp,'₹27,000'),'rupee deposit shows as rupees and feeds cash to move in (9,000 + 18,000)');
-await rp.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-depositRs').inputValue()==='18000'&&await p.locator('#field-deposit').inputValue()==='','edit restores the rupee deposit');
+await rp.getByRole('button',{name:/^Edit/}).click();ok(await p.locator('#field-depositRs').inputValue()==='18000'&&await p.locator('#field-deposit').inputValue()==='','edit restores the rupee deposit');
 await p.getByRole('button',{name:'Cancel'}).first().click();
 const first=p.locator('.fh-place').first();ok(await has(first,'Gut feel')&&await has(first,'8'),'gut feel saved as typed (8)');
-await first.getByRole('button',{name:'Edit'}).click();ok(await p.locator('#field-feel').inputValue()==='8','gut feel survives edit and reload');
+await first.getByRole('button',{name:/^Edit/}).click();ok(await p.locator('#field-feel').inputValue()==='8','gut feel survives edit and reload');
 await p.locator('#field-feel').scrollIntoViewIfNeeded();
 await p.locator('.fh-form-panel').screenshot({path:'/tmp/pg-form-full.png'});
 await p.getByRole('button',{name:'Cancel'}).first().click();

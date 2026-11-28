@@ -211,10 +211,12 @@
 .fh-rent{font-weight:700;letter-spacing:-.02em}
 body,.fh-app{font-optical-sizing:auto}
 
-.fh-app h1,.fh-app h2,.fh-app h3,.fh-app h4,.fh-wordmark,.fh-rent,.fh-empty h3,.fh-save h3,.fh-art-line,.fh-questions>div>span{font-family:var(--fh-head)}
+.fh-app h1,.fh-app h2,.fh-wordmark,.fh-rent,.fh-empty h3,.fh-save h3,.fh-art-line,.fh-questions>div>span{font-family:var(--fh-head)}
+.fh-app h3,.fh-app h4{font-family:var(--fh-font);letter-spacing:-.01em}
+.fh-app .fh-empty h3,.fh-app .fh-save h3{font-family:var(--fh-head);letter-spacing:-.02em}
 .fh-app h1{font-weight:700;letter-spacing:-.035em;line-height:1.05}
 .fh-app h2{font-weight:650;letter-spacing:-.025em}
-.fh-app h3{font-weight:650}
+.fh-app h3{font-weight:700}
 .fh-wordmark{font-weight:800;letter-spacing:-.04em}
 @media(max-width:600px){.fh-app h1{font-size:33px;font-weight:650;letter-spacing:-.04em}.fh-hero.fh-hero-compact h1{font-size:27px}}
 
@@ -230,7 +232,7 @@ body,.fh-app{font-optical-sizing:auto}
 .fh-check-section{box-shadow:var(--fh-shadow);border-color:var(--fh-line)}
 .fh-place dl>div,.fh-place .fh-stat{border-radius:var(--fh-r-tile)}
 .fh-compare button{border-radius:var(--fh-r-tile);box-shadow:0 1px 0 #1f332c0d}
-.fh-compare button b{font-family:var(--fh-head);letter-spacing:-.01em}
+.fh-compare button b{font-family:var(--fh-font);letter-spacing:-.005em}
 .fh-callout,.fh-status,.fh-share-row{border-radius:var(--fh-r-tile)}
 .fh-card-actions{gap:8px;border-top:0;padding-top:4px}
 .fh-card-actions button{background:var(--fh-mint);border-radius:12px;padding:0 14px;min-height:44px;font-size:14px;font-weight:600;color:var(--fh-green)}

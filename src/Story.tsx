@@ -13,7 +13,7 @@ function Clip({k}:{k:ClipKey}){
 export function Story(){
  return <div className="fh-app fh-story-page">
   <header className="fh-header"><a className="fh-wordmark" href="#"><span>⌂</span>flat hunt<span className="fh-dot">.</span></a><a className="fh-text" href="#">← Back to the notebook</a></header>
-  <article className="fh-story">
+  <main className="fh-story">
    <p className="fh-eyebrow">THE STORY BEHIND IT</p>
    <h1>Everyone Remembers the Balcony. Nobody Remembers the Deposit.</h1>
    <p>I keep hearing from friends who are struggling with flat hunting. It is hard enough on its own. Then there is a second problem that gets less attention: even after you have seen a flat, it is surprisingly difficult to remember what you actually learned there.</p>
@@ -35,7 +35,7 @@ export function Story(){
    <p>Flat Hunt is an early version, and it gets better with real flat hunts. Try it on the last flat you saw. If a check is missing, open an issue on <a href="https://github.com/shivangipriya/flat-hunt/issues" target="_blank" rel="noreferrer">GitHub</a> and tell me which one. The <a href="https://github.com/shivangipriya/flat-hunt" target="_blank" rel="noreferrer">source</a> is there too.</p>
    <p>Balcony: lovely. Deposit: Not added. Yet.</p>
    <p className="fh-story-sign">Shivangi :)</p>
-  </article>
+  </main>
   <footer className="fh-footer fh-story-footer"><div><strong>flat hunt.</strong></div><p>Made with care by <a href="https://www.linkedin.com/in/shivangii-priyaa" target="_blank" rel="noreferrer">Shivangi Priya</a> · <a href="https://github.com/shivangipriya/flat-hunt" target="_blank" rel="noreferrer">Source on GitHub</a></p></footer>
  </div>;
 }

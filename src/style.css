@@ -173,3 +173,5 @@
 .fh-place{scroll-margin-top:12px}
 
 [role=tabpanel]{scroll-margin-top:8px}
+.fh-story-fig video{display:block;margin:0 auto;max-width:100%;height:auto;border-radius:8px;border:1px solid var(--fh-line);background:#111}.fh-story .fh-story-sign{font-size:18px;margin-top:6px}
+.fh-app .fh-story h1{margin-bottom:26px}

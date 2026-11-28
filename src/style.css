@@ -260,3 +260,4 @@ body,.fh-app{font-optical-sizing:auto}
 
 .fh-tabs button>span{opacity:1}
 .fh-more{margin:24px 0;text-align:center}.fh-more p{font-size:13px;color:var(--fh-muted);margin:0 0 12px}
+.fh-callout .fh-text{padding:11px 6px;margin-top:-11px;margin-bottom:-11px;min-height:0}
